@@ -54,12 +54,15 @@
   --secondary-foreground: #d0d0d4;
   --muted: #484a4e;
   --muted-foreground: #e7e7ec;
+  --muted-border: #000000;
   --accent: #8470ff;
   --accent-foreground: #0f172a;
   --destructive: #ef4444;
   --destructive-foreground: #f1f5f9;
-  --border: #bfbfc0;
+  --border: #b4b4b4;
+  
   --input: #ffffff;
+  
   --ring: #8470ff;
   --chart-1: #22c55e;
   --chart-2: #94a3b8;

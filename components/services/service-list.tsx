@@ -279,6 +279,7 @@ export function ServiceList() {
                 required
                 value={formData.name}
                 onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+                className="border-border"
               />
             </div>
 
@@ -289,6 +290,7 @@ export function ServiceList() {
                 value={formData.description}
                 onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
                 rows={3}
+                className="border-border"
               />
             </div>
 
@@ -306,6 +308,7 @@ export function ServiceList() {
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, duration_minutes: Number.parseInt(e.target.value) }))
                   }
+                  className="border-border"
                 />
               </div>
              {/* <div className="space-y-2">

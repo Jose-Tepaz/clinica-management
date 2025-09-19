@@ -4,13 +4,17 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
-import { createClient } from "@/lib/supabase/client"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { useState, useEffect } from "react"
+import { useAuth } from "@/hooks/use-auth"
 
 interface SidebarProps {
   className?: string
+}
+
+export interface SidebarContentProps {
+  isAdmin: boolean
+  onLogout: () => void
+  isLoading: boolean
 }
 
 const mainNavigation = [
@@ -90,91 +94,80 @@ const adminNavigation = [
   },
 ]
 
-export function Sidebar({ className }: SidebarProps) {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
-  const [userRole, setUserRole] = useState<string | null>(null)
-
-  useEffect(() => {
-    const getUserRole = async () => {
-      const supabase = createClient()
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-
-      if (user) {
-        const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single()
-        setUserRole(profile?.role || null)
-      }
-    }
-
-    getUserRole()
-  }, [])
-
-  const handleLogout = async () => {
-    setIsLoading(true)
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    router.push("/auth/login")
-  }
-
-  const isAdmin = userRole === "admin"
-
+// Componente del contenido del sidebar (reutilizable)
+export function SidebarContent({ isAdmin, onLogout, isLoading }: SidebarContentProps) {
   return (
-    <div className={cn("pb-12 w-64", className)}>
-      <div className="space-y-4 py-4">
-        <div className="px-3 py-2">
-          <div className="flex items-center mb-6">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center mr-3">
-              <svg className="w-5 h-5 text-primary-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </div>
-            <h2 className="text-lg font-semibold text-primary-foreground">WO.MENS</h2>
+    <div className="space-y-4 py-4">
+      <div className="px-3 py-2">
+        <div className="flex items-center mb-6">
+          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center mr-3">
+            <svg className="w-5 h-5 text-primary-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
           </div>
-          <ScrollArea className="h-[calc(100vh-200px)]">
-            <div className="space-y-1">
-              {mainNavigation.map((item) => (
-                <Button key={item.name} variant="ghost" className="w-full justify-start text-primary-foreground hover:bg-secondary " asChild>
-                  <Link href={item.href}>
-                    {item.icon}
-                    <span className="ml-2">{item.name}</span>
-                  </Link> 
-                </Button>
-              ))}
+          <h2 className="text-lg font-semibold text-primary-foreground">WO.MENS</h2>
+        </div>
+        <ScrollArea className="h-[calc(100vh-200px)]">
+          <div className="space-y-1">
+            {mainNavigation.map((item) => (
+              <Button key={item.name} variant="ghost" className="w-full justify-start text-primary-foreground hover:bg-secondary" asChild>
+                <Link href={item.href}>
+                  {item.icon}
+                  <span className="ml-2">{item.name}</span>
+                </Link> 
+              </Button>
+            ))}
 
-              {isAdmin && (
-                <>
-                  <Separator className="my-4" />
-                  <div className="px-2 py-2">
-                    <h3 className="text-xs font-semibold text-primary-foreground uppercase tracking-wider">
-                      Administración
-                    </h3>
-                  </div>
-                  {adminNavigation.map((item) => (
-                    <Button key={item.name} variant="ghost" className="w-full justify-start text-primary-foreground" asChild>
-                      <Link href={item.href}>
-                        {item.icon}
-                        <span className="ml-2">{item.name}</span>
-                      </Link>
-                    </Button>
-                  ))}
-                </>
-              )}
-            </div>
-          </ScrollArea>
-        </div>
-        <div className="px-3">
-          <Button variant="outline" className="w-full bg-secondary text-secondary" onClick={handleLogout} disabled={isLoading}>
-            {isLoading ? "Cerrando sesión..." : "Cerrar Sesión"}
-          </Button>
-        </div>
+            {isAdmin && (
+              <>
+                <Separator className="my-4" />
+                <div className="px-2 py-2">
+                  <h3 className="text-xs font-semibold text-primary-foreground uppercase tracking-wider">
+                    Administración
+                  </h3>
+                </div>
+                {adminNavigation.map((item) => (
+                  <Button key={item.name} variant="ghost" className="w-full justify-start text-primary-foreground hover:bg-secondary" asChild>
+                    <Link href={item.href}>
+                      {item.icon}
+                      <span className="ml-2">{item.name}</span>
+                    </Link>
+                  </Button>
+                ))}
+              </>
+            )}
+          </div>
+        </ScrollArea>
+      </div>
+      <div className="px-3">
+        <Button variant="outline" className="w-full bg-secondary text-secondary-foreground" onClick={onLogout} disabled={isLoading}>
+          {isLoading ? "Cerrando sesión..." : "Cerrar Sesión"}
+        </Button>
       </div>
     </div>
+  )
+}
+
+// Componente principal del sidebar
+export function Sidebar({ className }: SidebarProps) {
+  const { isAdmin, isLoading, handleLogout } = useAuth()
+
+  return (
+    <>
+      {/* Versión Desktop */}
+      <div className={cn("hidden lg:block pb-12 w-64", className)}>
+        <SidebarContent 
+          isAdmin={isAdmin} 
+          onLogout={handleLogout} 
+          isLoading={isLoading} 
+        />
+      </div>
+
+    </>
   )
 }
