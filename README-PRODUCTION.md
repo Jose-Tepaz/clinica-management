@@ -32,7 +32,6 @@ cp .env.example .env.local
 # Editar con tus valores de producción:
 NEXT_PUBLIC_SUPABASE_URL=tu_url_de_supabase
 NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_clave_anonima
-NEXT_PUBLIC_APP_URL=https://tu-dominio.com
 ```
 
 #### **2. Desplegar en Vercel (Recomendado):**
@@ -54,7 +53,7 @@ npm start
 ### 📋 **Checklist Pre-Despliegue:**
 
 - ✅ Build exitoso sin errores
-- ✅ Variables de entorno configuradas
+- ✅ Variables de entorno configuradas (Supabase)
 - ✅ Base de datos Supabase configurada
 - ✅ Dominio configurado (si aplica)
 - ✅ SSL/HTTPS habilitado

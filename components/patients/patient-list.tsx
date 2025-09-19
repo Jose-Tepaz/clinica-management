@@ -115,12 +115,12 @@ export function PatientList() {
     <div className="space-y-4">
       <Card className="bg-card-foreground">
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <CardTitle className="text-secondary">Gestión de Pacientes</CardTitle>
               <CardDescription className="text-secondary">Administra la información de los pacientes de la clínica</CardDescription>
             </div>
-            <Button onClick={handleNewPatient}>
+            <Button onClick={handleNewPatient} className="w-full sm:w-auto mt-2 sm:mt-0">
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
@@ -129,15 +129,15 @@ export function PatientList() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center space-x-2 mb-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-4">
             <Input
               placeholder="Buscar pacientes por nombre, email o teléfono..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{ backgroundColor: "transparent" }}
-              className="max-w-sm text-secondary shadow-none border-secondary focus:bg-transparent focus:ring-0 focus:border-secondary"
+              className="w-full sm:max-w-sm text-secondary shadow-none border-secondary focus:bg-transparent focus:ring-0 focus:border-secondary"
             />
-            <Badge variant="secondary" className="text-primary-foreground bg-card">{filteredPatients.length} pacientes</Badge>
+            <Badge variant="secondary" className="text-primary-foreground bg-card self-center sm:self-auto">{filteredPatients.length} pacientes</Badge>
           </div>
 
           {filteredPatients.length === 0 ? (
@@ -159,75 +159,123 @@ export function PatientList() {
                 {searchTerm ? "No se encontraron pacientes" : "No hay pacientes registrados"}
               </p>
               {!searchTerm && (
-                <Button onClick={handleNewPatient} className="mt-4">
+                <Button onClick={handleNewPatient} className="mt-4 w-full sm:w-auto">
                   Agregar Primer Paciente
                 </Button>
               )}
             </div>
           ) : (
             <div className="rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow className="hover:bg-transparent">
-                    <TableHead className="text-secondary">Nombre</TableHead>
-                    <TableHead className="text-secondary">Contacto</TableHead>
-                    <TableHead className="text-secondary">Edad</TableHead>
-                    <TableHead className="text-secondary">Fecha de Registro</TableHead>
-                    <TableHead className="text-secondary">Acciones</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredPatients.map((patient) => (
-                    <TableRow
-                      key={patient.id}
-                      className="transition-colors hover:bg-primary/10"
-                    >
-                      <TableCell>
-                        <div>
-                          <div className="font-medium text-secondary">
-                            {patient.first_name} {patient.last_name}
-                          </div>
-                          {patient.medical_notes && (
-                            <div className="text-xs text-muted mt-1">
-                              <Badge variant="outline" className="text-xs text-secondary">
-                                Tiene notas médicas
-                              </Badge>
+              {/* Tabla visible en pantallas md y mayores, con overflow-auto */}
+              <div className="hidden md:block">
+                <div className="overflow-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="hover:bg-transparent">
+                        <TableHead className="text-secondary">Nombre</TableHead>
+                        <TableHead className="text-secondary">Contacto</TableHead>
+                        <TableHead className="text-secondary">Edad</TableHead>
+                        <TableHead className="text-secondary">Fecha de Registro</TableHead>
+                        <TableHead className="text-secondary">Acciones</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredPatients.map((patient) => (
+                        <TableRow
+                          key={patient.id}
+                          className="transition-colors hover:bg-primary/10"
+                        >
+                          <TableCell>
+                            <div>
+                              <div className="font-medium text-secondary">
+                                {patient.first_name} {patient.last_name}
+                              </div>
+                              {patient.medical_notes && (
+                                <div className="text-xs text-muted mt-1">
+                                  <Badge variant="outline" className="text-xs text-secondary">
+                                    Tiene notas médicas
+                                  </Badge>
+                                </div>
+                              )}
                             </div>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm text-secondary">
-                          {patient.email && <div>{patient.email}</div>}
-                          {patient.phone && <div className="text-muted">{patient.phone}</div>}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-secondary">{calculateAge(patient.date_of_birth)} años</TableCell>
-                      <TableCell className="text-secondary">{formatDate(patient.created_at)}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center space-x-2">
-                          <Button
-                            variant="default"
-                            size="sm"
-                            onClick={() => handleEditPatient(patient)}
-                            className="bg-primary hover:bg-primary/90 text-white"
-                          >
-                            Editar
-                          </Button>
-                          <Button
-                            variant="default"
-                            size="sm"
-                            asChild
-                            className="bg-secondary hover:bg-secondary/90 text-white"
-                          >
-                            <Link href={`/dashboard/patients/${patient.id}`}>Ver Historial</Link>
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                          </TableCell>
+                          <TableCell>
+                            <div className="text-sm text-secondary">
+                              {patient.email && <div>{patient.email}</div>}
+                              {patient.phone && <div className="text-muted">{patient.phone}</div>}
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-secondary">{calculateAge(patient.date_of_birth)} años</TableCell>
+                          <TableCell className="text-secondary">{formatDate(patient.created_at)}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center space-x-2">
+                              <Button
+                                variant="default"
+                                size="sm"
+                                onClick={() => handleEditPatient(patient)}
+                                className="bg-primary hover:bg-primary/90 text-white"
+                              >
+                                Editar
+                              </Button>
+                              <Button
+                                variant="default"
+                                size="sm"
+                                asChild
+                                className="bg-secondary hover:bg-secondary/90 text-white"
+                              >
+                                <Link href={`/dashboard/patients/${patient.id}`}>Ver Historial</Link>
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
+              {/* Vista tipo "cards" para móviles */}
+              <div className="block md:hidden divide-y">
+                {filteredPatients.map((patient) => (
+                  <div key={patient.id} className="py-4 px-2 flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                      <div className="font-medium text-secondary text-lg">
+                        {patient.first_name} {patient.last_name}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="default"
+                          size="sm"
+                          onClick={() => handleEditPatient(patient)}
+                          className="bg-primary hover:bg-primary/90 text-white"
+                        >
+                          Editar
+                        </Button>
+                        <Button
+                          variant="default"
+                          size="sm"
+                          asChild
+                          className="bg-secondary hover:bg-secondary/90 text-white"
+                        >
+                          <Link href={`/dashboard/patients/${patient.id}`}>Ver</Link>
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="text-sm text-secondary">
+                      {patient.email && <div>{patient.email}</div>}
+                      {patient.phone && <div className="text-muted">{patient.phone}</div>}
+                    </div>
+                    <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                      <span>Edad: <span className="text-secondary">{calculateAge(patient.date_of_birth)} años</span></span>
+                      <span>Registrado: <span className="text-secondary">{formatDate(patient.created_at)}</span></span>
+                      {patient.medical_notes && (
+                        <Badge variant="outline" className="text-xs text-secondary">
+                          Tiene notas médicas
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </CardContent>

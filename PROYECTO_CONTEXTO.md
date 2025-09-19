@@ -243,7 +243,6 @@ El proyecto incluye scripts SQL organizados:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=tu_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_supabase_anon_key
-NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL=http://localhost:3000/dashboard
 ```
 
 ### Comandos Disponibles
