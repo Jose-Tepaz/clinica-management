@@ -136,15 +136,14 @@ export default function RegisterPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="role">Rol</Label>
-                <Select value={formData.role} onValueChange={(value) => handleInputChange("role", value)}>
+                <Select value={formData.role} onValueChange={(value) => handleInputChange("role", value)} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecciona un rol" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent >
                     <SelectItem value="admin">Administrador</SelectItem>
-                    <SelectItem value="doctor">Doctor</SelectItem>
-                    <SelectItem value="nurse">Enfermero/a</SelectItem>
-                    <SelectItem value="staff">Personal</SelectItem>
+                    <SelectItem value="assistant">Asistente</SelectItem>
+                    
                   </SelectContent>
                 </Select>
               </div>
