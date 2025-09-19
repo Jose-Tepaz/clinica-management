@@ -223,7 +223,7 @@ export function ServiceList() {
                     <TableHead className="text-secondary">Servicio</TableHead>
                     <TableHead className="text-secondary">Duración</TableHead>
                     <TableHead className="text-secondary">Precio</TableHead>
-                    <TableHead className="text-secondary">Acciones</TableHead>
+                    {/* <TableHead className="text-secondary">Acciones</TableHead> */}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -233,12 +233,12 @@ export function ServiceList() {
                         <div>
                           <div className="font-medium">{service.name}</div>
                           {service.description && (
-                            <div className="text-sm text-muted-foreground">{service.description}</div>
+                            <div className="text-sm text-muted">{service.description}</div>
                           )}
                         </div>
                       </TableCell>
                       <TableCell>{service.duration_minutes} min</TableCell>
-                      <TableCell>${service.price}</TableCell>
+                      {/* <TableCell>Q{service.price}</TableCell> */}
                       <TableCell>
                         <div className="flex items-center space-x-2">
                           <Button variant="outline" size="sm" onClick={() => handleEditService(service)}>
@@ -308,7 +308,7 @@ export function ServiceList() {
                   }
                 />
               </div>
-              <div className="space-y-2">
+             {/* <div className="space-y-2">
                 <Label htmlFor="price">Precio (Q)</Label>
                 <Input
                   id="price"
@@ -320,6 +320,7 @@ export function ServiceList() {
                   onChange={(e) => setFormData((prev) => ({ ...prev, price: Number.parseFloat(e.target.value) }))}
                 />
               </div>
+              */}
             </div>
 
             {error && <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-md">{error}</div>}

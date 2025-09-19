@@ -163,12 +163,12 @@ export function MedicalRecordForm({
         .select(`
           id,
           appointment_date,
-          patients!inner (first_name, last_name)
+          patients (first_name, last_name)
         `)
         .eq("patient_id", formData.patient_id)
         .order("appointment_date", { ascending: false })
 
-      setAppointments(data || [])
+      setAppointments((data as unknown) as AppointmentWithPatient[] || [])
     }
 
     fetchAppointments()
